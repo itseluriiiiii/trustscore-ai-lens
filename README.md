@@ -2,6 +2,8 @@
 
 TrustScore AI Lens is a powerful, production-ready trust intelligence engine designed to protect users during online shopping. It uses advanced AI (Gemini 2.5 Flash) and robust heuristic analysis to detect phishing links, fake reviews, and deceptive online patterns in real-time.
 
+![Project Overview](screenshots/img2.png)
+
 ## 🚀 Features
 
 - **Dual-Engine Analysis**: Combines high-speed heuristic checks with state-of-the-art LLM reasoning.
@@ -9,6 +11,12 @@ TrustScore AI Lens is a powerful, production-ready trust intelligence engine des
 - **Review Authenticity**: Analyzes sentiment, language patterns, and emotional manipulation in product reviews.
 - **Privacy First**: Analysis runs entirely in your context, with optional Gemini integration for deep-dive checks.
 - **Premium UI**: Modern, high-performance interface built with Vite, React, and Tailwind CSS 4.
+
+## 📸 Screenshots
+
+| High-Trust Analysis | High-Risk Detection |
+|:---:|:---:|
+| ![Safe Result](screenshots/img1.png) | ![Risk Result](screenshots/img3.png) |
 
 ## 📊 Performance Metrics
 
@@ -29,7 +37,7 @@ Our model is optimized for high precision and recall to minimize false positives
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/trustscore-ai-lens.git
+   git clone https://github.com/itseluriiiiii/trustscore-ai-lens.git
    ```
 
 2. **Install dependencies**:
