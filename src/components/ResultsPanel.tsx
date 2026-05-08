@@ -2,8 +2,8 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrustScoreGauge } from "./TrustScoreGauge";
 import { RadarChart } from "./RadarChart";
-import { ShieldCheck, ShieldAlert, ShieldX, AlertTriangle, Info, Globe, Mail, Phone, MapPin, Lock, FileText, ExternalLink } from "lucide-react";
-import type { AnalysisResult } from "@/utils/analyze.functions";
+import { ShieldCheck, ShieldAlert, ShieldX, AlertTriangle, Info } from "lucide-react";
+import type { AnalysisResult } from "@/utils/analyze";
 
 interface ResultsPanelProps {
   result: AnalysisResult;
@@ -21,29 +21,10 @@ const recConfig = {
   Avoid: { class: "text-trust-danger", label: "✕ Consider Avoiding" },
 };
 
-function EvidenceRow({ icon: Icon, label, value, status }: { icon: React.ElementType; label: string; value: string; status: "good" | "warning" | "bad" | "neutral" }) {
-  const statusColors = {
-    good: "text-trust-safe",
-    warning: "text-trust-caution",
-    bad: "text-trust-danger",
-    neutral: "text-muted-foreground",
-  };
-  return (
-    <div className="flex items-start gap-3 py-2">
-      <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${statusColors[status]}`} />
-      <div className="min-w-0">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <p className={`text-sm ${statusColors[status]} break-all`}>{value}</p>
-      </div>
-    </div>
-  );
-}
-
 export function ResultsPanel({ result }: ResultsPanelProps) {
   const risk = riskConfig[result.riskLevel];
   const rec = recConfig[result.recommendation];
   const RiskIcon = risk.icon;
-  const ev = result.scrapedEvidence;
 
   return (
     <motion.div
@@ -73,70 +54,6 @@ export function ResultsPanel({ result }: ResultsPanelProps) {
           </CardContent>
         </Card>
       </div>
-
-      {ev && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Card className="border-border/50">
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Globe className="w-4 h-4 text-primary" />
-                Website Scrape Evidence
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1">
-                <EvidenceRow
-                  icon={Lock}
-                  label="HTTPS / SSL"
-                  value={ev.isHttps ? "Secure (HTTPS)" : "NOT SECURE (HTTP only)"}
-                  status={ev.isHttps ? "good" : "bad"}
-                />
-                <EvidenceRow
-                  icon={Mail}
-                  label="Emails Found"
-                  value={ev.emailsFound.length > 0 ? ev.emailsFound.join(", ") : "None found"}
-                  status={ev.emailsFound.length > 0 ? "good" : "warning"}
-                />
-                <EvidenceRow
-                  icon={Phone}
-                  label="Phone Numbers"
-                  value={ev.phonesFound.length > 0 ? ev.phonesFound.join(", ") : "None found"}
-                  status={ev.phonesFound.length > 0 ? "good" : "warning"}
-                />
-                <EvidenceRow
-                  icon={MapPin}
-                  label="Physical Address"
-                  value={ev.physicalAddresses.length > 0 ? ev.physicalAddresses.join("; ") : "None found"}
-                  status={ev.physicalAddresses.length > 0 ? "good" : "warning"}
-                />
-                <EvidenceRow
-                  icon={FileText}
-                  label="Legal Pages"
-                  value={[
-                    ev.hasPrivacyPolicy ? "Privacy Policy ✓" : "Privacy Policy ✗",
-                    ev.hasTermsOfService ? "Terms ✓" : "Terms ✗",
-                    ev.hasContactPage ? "Contact ✓" : "Contact ✗",
-                  ].join(" · ")}
-                  status={ev.hasPrivacyPolicy && ev.hasTermsOfService ? "good" : ev.hasPrivacyPolicy || ev.hasTermsOfService ? "warning" : "bad"}
-                />
-                <EvidenceRow
-                  icon={ExternalLink}
-                  label="Social Media"
-                  value={ev.socialLinks.length > 0 ? `${ev.socialLinks.length} links found` : "None found"}
-                  status={ev.socialLinks.length > 0 ? "good" : "neutral"}
-                />
-              </div>
-              {ev.scrapeError && (
-                <p className="mt-3 text-xs text-trust-danger">⚠ Scrape issue: {ev.scrapeError}</p>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="border-border/50">
@@ -180,6 +97,24 @@ export function ResultsPanel({ result }: ResultsPanelProps) {
           </CardContent>
         </Card>
       </div>
+
+      {result.recommendation === "Avoid" && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="p-4 rounded-xl border border-trust-danger/30 bg-trust-danger/10 flex items-center gap-4"
+        >
+          <div className="p-2 rounded-full bg-trust-danger/20 text-trust-danger">
+            <ShieldX className="w-6 h-6" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-trust-danger uppercase tracking-wider">Safety Advisory</p>
+            <p className="text-sm text-surface-foreground">
+              This link exhibits high-risk patterns. <strong>Do not access the link</strong> if you suspect it is harmful.
+            </p>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

@@ -27,7 +27,7 @@ export function HeroSection({ onAnalyze, isLoading }: HeroSectionProps) {
         className="flex items-center gap-2 mb-6"
       >
         <Shield className="w-8 h-8 text-primary" />
-        <span className="text-2xl font-bold font-display tracking-tight">CheckMate AI</span>
+        <span className="text-2xl font-bold font-display tracking-tight text-foreground">TrustScore AI Lens</span>
       </motion.div>
 
       <motion.h1

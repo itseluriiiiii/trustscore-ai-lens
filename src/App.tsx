@@ -1,23 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { ResultsPanel } from "@/components/ResultsPanel";
-import { analyzeInput, type AnalysisResult } from "@/utils/analyze.functions";
+import { analyzeInput, type AnalysisResult } from "@/utils/analyze";
 import { Toaster, toast } from "sonner";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-  head: () => ({
-    meta: [
-      { title: "CheckMate AI – Trust Intelligence Engine" },
-      { name: "description", content: "AI-powered analysis to detect fake reviews and scam websites. Get instant trust scores and safety recommendations." },
-      { property: "og:title", content: "CheckMate AI – Trust Intelligence Engine" },
-      { property: "og:description", content: "Detect fake reviews and scam websites with AI-powered trust analysis." },
-    ],
-  }),
-});
-
-function Index() {
+export default function App() {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,10 +12,12 @@ function Index() {
     setIsLoading(true);
     setResult(null);
     try {
-      const analysis = await analyzeInput({ data: { input, type } });
+      const analysis = await analyzeInput(input, type);
       setResult(analysis);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Analysis failed. Please try again.");
+      toast.error(
+        err instanceof Error ? err.message : "Analysis failed. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +33,8 @@ function Index() {
         </div>
       )}
       <footer className="text-center py-8 text-xs text-muted-foreground">
-        CheckMate AI uses probabilistic analysis. Results are advisory, not definitive.
+        TrustScore AI Lens uses probabilistic analysis. Results are advisory, not
+        definitive.
       </footer>
     </div>
   );
